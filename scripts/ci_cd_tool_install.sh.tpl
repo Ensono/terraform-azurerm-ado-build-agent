@@ -6,6 +6,7 @@ ado_org_url=${ado_org_url}
 ado_pat_token=${ado_pat}
 ado_project_id=${ado_project_id}
 ado_agent_version="4.248.0"
+ado_agent_user="adminuser"
 
 ###########################################
 # Install Azure DevOps Agent
@@ -34,14 +35,14 @@ cat << EOF > /tmp/setup_agent.sh
 EOF
 
 chmod +x /tmp/setup_agent.sh
-su -c /tmp/setup_agent.sh adminuser
+su -c /tmp/setup_agent.sh $ado_agent_user
 
 echo "\tInstall and run service"
 
 # Now install and run the service, which must be run as root
 # Service install must be run from the agent root
 cd /agent
-/agent/svc.sh install adminuser
+/agent/svc.sh install $ado_agent_user
 /agent/svc.sh start
 cd -
 
@@ -92,5 +93,17 @@ sudo apt-get update
 
 # Install Docker
 apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# Assign the agent user to the Docker group
+# Ensure the docker group exists
+if grep -q docker /etc/group
+then
+  echo "Docker group already exists"
+else
+  groupadd docker
+fi
+
+# Ensure the adminuser is part of the group
+usermod -aG docker $ado_agent_user
 
 exit 0
