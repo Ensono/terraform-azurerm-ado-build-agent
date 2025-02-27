@@ -106,4 +106,8 @@ fi
 # Ensure the adminuser is part of the group
 usermod -aG docker $ado_agent_user
 
+# Restart the agent service to that the new group permissions are picked up
+/agent/svc.sh stop
+/agent/svc.sh start
+
 exit 0
