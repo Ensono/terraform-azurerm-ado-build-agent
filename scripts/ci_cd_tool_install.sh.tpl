@@ -108,9 +108,7 @@ usermod -aG docker $ado_agent_user
 
 # Restart the agent service to that the new group permissions are picked up
 /agent/svc.sh stop
-
-# wait for the service to stop
-sleep 10
+pkill -F /var/run/waagent.pid
 
 /agent/svc.sh start
 
