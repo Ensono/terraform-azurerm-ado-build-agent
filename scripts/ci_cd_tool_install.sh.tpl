@@ -9,44 +9,6 @@ ado_agent_version="4.248.0"
 ado_agent_user="adminuser"
 
 ###########################################
-# Install Azure DevOps Agent
-###########################################
-
-echo "Installing Azuure DevOps Agent"
-
-mkdir /agent 
-
-echo "\tDownload"
-
-curl -L https://vstsagentpackage.azureedge.net/agent/$ado_agent_version/vsts-agent-linux-x64-$ado_agent_version.tar.gz -o /tmp/agent.tar.gz
-
-echo "\tUnpack"
-
-tar zxf /tmp/agent.tar.gz -C /agent
-rm -f /tmp/agent.tar.gz
-
-chmod -R 777 /agent
-
-echo "\tConfigure"
-
-# The configuration script for the agent must be executed under a non-root user
-cat << EOF > /tmp/setup_agent.sh
-/agent/config.sh --unattended  --url $ado_org_url --auth pat --token $ado_pat_token --pool $ado_agent_pool
-EOF
-
-chmod +x /tmp/setup_agent.sh
-su -c /tmp/setup_agent.sh $ado_agent_user
-
-echo "\tInstall and run service"
-
-# Now install and run the service, which must be run as root
-# Service install must be run from the agent root
-cd /agent
-/agent/svc.sh install $ado_agent_user
-/agent/svc.sh start
-cd -
-
-###########################################
 # Install PowerShell
 ###########################################
 
@@ -111,5 +73,43 @@ usermod -aG docker $ado_agent_user
 pkill -F /var/run/waagent.pid
 
 /agent/svc.sh start
+
+###########################################
+# Install Azure DevOps Agent
+###########################################
+
+echo "Installing Azuure DevOps Agent"
+
+mkdir /agent 
+
+echo "\tDownload"
+
+curl -L https://vstsagentpackage.azureedge.net/agent/$ado_agent_version/vsts-agent-linux-x64-$ado_agent_version.tar.gz -o /tmp/agent.tar.gz
+
+echo "\tUnpack"
+
+tar zxf /tmp/agent.tar.gz -C /agent
+rm -f /tmp/agent.tar.gz
+
+chmod -R 777 /agent
+
+echo "\tConfigure"
+
+# The configuration script for the agent must be executed under a non-root user
+cat << EOF > /tmp/setup_agent.sh
+/agent/config.sh --unattended  --url $ado_org_url --auth pat --token $ado_pat_token --pool $ado_agent_pool
+EOF
+
+chmod +x /tmp/setup_agent.sh
+su -c /tmp/setup_agent.sh $ado_agent_user
+
+echo "\tInstall and run service"
+
+# Now install and run the service, which must be run as root
+# Service install must be run from the agent root
+cd /agent
+/agent/svc.sh install $ado_agent_user
+/agent/svc.sh start
+cd -
 
 exit 0
