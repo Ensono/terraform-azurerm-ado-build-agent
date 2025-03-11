@@ -68,12 +68,6 @@ fi
 # Ensure the adminuser is part of the group
 usermod -aG docker $ado_agent_user
 
-# Restart the agent service to that the new group permissions are picked up
-/agent/svc.sh stop
-pkill -F /var/run/waagent.pid
-
-/agent/svc.sh start
-
 ###########################################
 # Install Azure DevOps Agent
 ###########################################
