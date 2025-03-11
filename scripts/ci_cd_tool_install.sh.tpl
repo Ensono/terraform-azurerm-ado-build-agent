@@ -89,7 +89,6 @@ curl -L https://vstsagentpackage.azureedge.net/agent/$ado_agent_version/vsts-age
 echo "\tUnpack"
 
 tar zxf /tmp/agent.tar.gz -C /agent
-rm -f /tmp/agent.tar.gz
 
 chmod -R 777 /agent
 
