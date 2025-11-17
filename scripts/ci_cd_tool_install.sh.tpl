@@ -78,7 +78,7 @@ mkdir /agent
 
 echo "\tDownload"
 
-curl -L https://vstsagentpackage.azureedge.net/agent/$ado_agent_version/vsts-agent-linux-x64-$ado_agent_version.tar.gz -o /tmp/agent.tar.gz
+curl -L https://download.agent.dev.azure.com/agent/$ado_agent_version/vsts-agent-linux-x64-$ado_agent_version.tar.gz -o /tmp/agent.tar.gz
 
 echo "\tUnpack"
 
